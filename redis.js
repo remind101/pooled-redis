@@ -73,7 +73,7 @@ PooledRedis.prototype.renameex = function(oldName, newName) {
     .fail(function(err) {
       deferred.fail(err);
     });
-  return deferred;
+  return deferred.promise;
 };
 
 PooledRedis.prototype.rpoplpush = function(source, dest) {
@@ -92,20 +92,32 @@ PooledRedis.prototype.set = function(key, value, expireSeconds) {
     args.concat(['EX', expireSeconds]);
   }
 
-  return this.command.call(this, args);
+  return this.command.apply(this, args);
 
 };
 
 PooledRedis.prototype.setnx = function(key, value, expireSeconds) {
 
-  var args = ['set', key, value, 'NX'];
+  var deferred = Q.defer(),
+      args = ['set', key, value, 'NX'];
 
   if (expireSeconds) {
     args.concat(['EX', expireSeconds]);
   }
 
-  return this.command.call(this, args);
+  this.command.apply(this, args)
+    .then(function(result) {
+      if (result == 'OK') {
+        deferred.resolve(result);
+      } else {
+        deferred.reject();
+      }
+    })
+    .fail(function(err) {
+      deferred.reject(err);
+    });
 
+  return deferred.promise;
 };
 
 PooledRedis.prototype.smembers = function(key) {
