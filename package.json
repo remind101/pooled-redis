@@ -1,0 +1,19 @@
+{
+  "name": "pooled-redis",
+  "version": "0.0.1",
+  "description": "Connection pooled Redis client that utilizes promises.",
+  "main": "redis.js",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/remind101/pooled-redis.git"
+  },
+  "keywords": [
+    "redis"
+  ],
+  "author": "Remind 101 (https://github.com/remind101)",
+  "dependencies": {
+    "generic-pool": "^2.0.4",
+    "q": "^1.0.1",
+    "redis": "^0.10.3"
+  }
+}
