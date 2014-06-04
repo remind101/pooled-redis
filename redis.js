@@ -85,11 +85,27 @@ PooledRedis.prototype.sadd = function(key, value) {
 };
 
 PooledRedis.prototype.set = function(key, value, expireSeconds) {
-  return this.command('set', key, value, expireSeconds);
+
+  var args = ['set', key, value];
+
+  if (expireSeconds) {
+    args.concat(['EX', expireSeconds]);
+  }
+
+  return this.command.call(this, args);
+
 };
 
-PooledRedis.prototype.setnx = function(key, value) {
-  return this.command('setnx', key, value);
+PooledRedis.prototype.setnx = function(key, value, expireSeconds) {
+
+  var args = ['set', key, value, 'NX'];
+
+  if (expireSeconds) {
+    args.concat(['EX', expireSeconds]);
+  }
+
+  return this.command.call(this, args);
+
 };
 
 PooledRedis.prototype.smembers = function(key) {
@@ -121,7 +137,7 @@ PooledRedis.prototype.command = function() {
 };
 
 PooledRedis.prototype.multi = function(commands) {
-  
+
 };
 
 module.exports = PooledRedis;
