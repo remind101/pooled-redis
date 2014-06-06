@@ -4,12 +4,12 @@ var Pool = require('generic-pool'),
     Q = require('q'),
     Redis = require('redis');
 
-var PooledRedis = function PooledRedis() {
+var PooledRedis = function PooledRedis(port, host, options) {
   var localThis = this;
   this.pool = Pool.Pool({
     name: 'redis',
     create: function(callback) {
-      var client = Redis.createClient();
+      var client = Redis.createClient(port, host, options);
       client.on('error', function (err) {
         console.log('Redis Error', err);
       });
