@@ -110,7 +110,7 @@ PooledRedis.prototype.setnx = function(key, value, expireSeconds) {
       if (result == 'OK') {
         deferred.resolve(result);
       } else {
-        deferred.reject();
+        deferred.reject('NX failed');
       }
     })
     .fail(function(err) {
