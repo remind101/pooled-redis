@@ -127,7 +127,7 @@ PooledRedis.prototype.smembers = function(key) {
 PooledRedis.prototype.get = function(key) {
   var deferred = Q.defer();
 
-  this.command.apply(this, [key])
+  this.command('get', key)
     .then(function(result) {
       if (result === null) {
         deferred.reject('not found');
