@@ -124,6 +124,24 @@ PooledRedis.prototype.smembers = function(key) {
   return this.command('smembers', key);
 };
 
+PooledRedis.prototype.get = function(key) {
+  var deferred = Q.defer();
+
+  this.command.apply(this, [key])
+    .then(function(result) {
+      if (result === null) {
+        deferred.reject('not found');
+      } else {
+        deferred.resolve(result);
+      }
+    })
+    .fail(function(err) {
+      deferred.reject(err);
+    });
+
+  return deferred.promise;
+};
+
 PooledRedis.prototype.command = function() {
   var deferred = Q.defer();
   var args = Array.prototype.slice.call(arguments);
