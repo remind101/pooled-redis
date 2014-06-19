@@ -89,7 +89,7 @@ PooledRedis.prototype.set = function(key, value, expireSeconds) {
   var args = ['set', key, value];
 
   if (expireSeconds) {
-    args.concat(['EX', expireSeconds]);
+    args.push('EX', expireSeconds);
   }
 
   return this.command.apply(this, args);
@@ -102,7 +102,7 @@ PooledRedis.prototype.setnx = function(key, value, expireSeconds) {
       args = ['set', key, value, 'NX'];
 
   if (expireSeconds) {
-    args.concat(['EX', expireSeconds]);
+    args.push('EX', expireSeconds);
   }
 
   this.command.apply(this, args)
