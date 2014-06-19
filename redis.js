@@ -130,7 +130,7 @@ PooledRedis.prototype.get = function(key) {
   this.command.apply(this, [key])
     .then(function(result) {
       if (result === null) {
-        deferred.reject();
+        deferred.reject('not found');
       } else {
         deferred.resolve(result);
       }
