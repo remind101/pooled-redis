@@ -9,11 +9,13 @@ var PooledRedis = function PooledRedis(port, host, options) {
   this.pool = Pool.Pool({
     name: 'redis',
     create: function(callback) {
+      console.log('DEBUG -- Redis creating connection', new Error().stack);
       var client = Redis.createClient(port, host, options);
       client.on('error', function (err) {
         console.log('Redis Error', err);
       });
       client.release = function() {
+        console.log('DEBUG -- Redis releasing connection', new Error().stack);
         localThis.pool.release(client);
       };
       callback(null, client);
