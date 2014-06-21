@@ -25,7 +25,7 @@ var PooledRedis = function PooledRedis(port, host, options) {
       return client.quit();
     },
     max: 10,
-    min: 2,
+    min: 0,
     idleTimeoutMillis: 6000 * 1000,
     log: false
   });
