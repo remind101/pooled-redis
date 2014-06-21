@@ -24,6 +24,7 @@ var PooledRedis = function PooledRedis(port, host, options) {
     destroy: function(client) {
       console.log('REDIS DEBUG - destroy called', new Error().stack);
       client.end();
+      client.unref();
     },
     max: 50,
     min: 2,
