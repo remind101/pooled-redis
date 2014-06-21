@@ -6,7 +6,7 @@ var Pool = require('generic-pool'),
 
 var PooledRedis = function PooledRedis(port, host, options) {
   var localThis = this;
-  console.log('CREATING NEW REDIS POOL', new Error().stacktrace);
+  console.log('CREATING NEW REDIS POOL', new Error().stack);
   this.pool = Pool.Pool({
     name: 'redis',
     create: function(callback) {
