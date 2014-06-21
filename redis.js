@@ -11,15 +11,18 @@ var PooledRedis = function PooledRedis(port, host, options) {
     name: 'redis',
     create: function(callback) {
       var client = Redis.createClient(port, host, options);
+      console.log('REDIS DEBUG - create called', new Error().stack);
       client.on('error', function (err) {
         console.log('Redis Error', err);
       });
       client.release = function() {
+        console.log('REDIS DEBUG - release called', new Error().stack);
         localThis.pool.release(client);
       };
       callback(null, client);
     },
     destroy: function(client) {
+      console.log('REDIS DEBUG - destroy called', new Error().stack);
       client.end();
     },
     max: 50,
