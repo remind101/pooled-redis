@@ -26,7 +26,7 @@ var PooledRedis = function PooledRedis(port, host, options) {
     },
     max: 10,
     min: 2,
-    idleTimeoutMillis: 60 * 1000,
+    idleTimeoutMillis: 6000 * 1000,
     log: false
   });
 };
