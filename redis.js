@@ -6,27 +6,25 @@ var Pool = require('generic-pool'),
 
 var PooledRedis = function PooledRedis(port, host, options) {
   var localThis = this;
+  console.log('CREATING NEW REDIS POOL', new Error().stacktrace);
   this.pool = Pool.Pool({
     name: 'redis',
     create: function(callback) {
-      console.log('DEBUG -- Redis creating connection', new Error().stack);
       var client = Redis.createClient(port, host, options);
       client.on('error', function (err) {
         console.log('Redis Error', err);
       });
       client.release = function() {
-        console.log('DEBUG -- Redis releasing connection', new Error().stack);
         localThis.pool.release(client);
       };
       callback(null, client);
     },
     destroy: function(client) {
-      console.log('DEBUG -- pool connection destroy', new Error().stack);
-      return client.quit();
+      client.end();
     },
-    max: 10,
+    max: 50,
     min: 0,
-    idleTimeoutMillis: 6000 * 1000,
+    idleTimeoutMillis: 60 * 1000,
     log: false
   });
 };
