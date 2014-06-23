@@ -21,10 +21,10 @@ var PooledRedis = function PooledRedis(port, host, options) {
     destroy: function(client) {
       client.end();
     },
-    max: 50,
-    min: 2,
-    idleTimeoutMillis: 60 * 1000,
-    log: false
+    max: options.poolMaxSize || 10,
+    min: options.poolMinSize || 2,
+    idleTimeoutMillis: options.poolIdleTimeoutMillis || 60 * 1000,
+    log: options.poolLog || false
   });
 };
 
