@@ -70,7 +70,9 @@ PooledRedis.prototype.renameex = function(oldName, newName) {
         deferred.resolve();
       }
     })
-    .fail(deferred.reject);
+    .fail(deferred.reject)
+    .done();
+
   return deferred.promise;
 };
 
@@ -111,7 +113,8 @@ PooledRedis.prototype.setnx = function(key, value, expireSeconds) {
         deferred.reject('NX failed');
       }
     })
-    .fail(deferred.reject);
+    .fail(deferred.reject)
+    .done();
 
   return deferred.promise;
 };
@@ -131,7 +134,8 @@ PooledRedis.prototype.get = function(key) {
         deferred.resolve(result);
       }
     })
-    .fail(deferred.reject);
+    .fail(deferred.reject)
+    .done();
 
   return deferred.promise;
 };
