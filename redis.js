@@ -52,6 +52,10 @@ PooledRedis.prototype.get = function(key) {
   return this.command('get', key);
 };
 
+PooledRedis.prototype.hgetall = function(key) {
+  return this.command('hgetall', key);
+};
+
 PooledRedis.prototype.lpop = function(key) {
   return this.command('lpop', key);
 };
