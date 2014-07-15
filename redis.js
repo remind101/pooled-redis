@@ -144,6 +144,26 @@ PooledRedis.prototype.get = function(key) {
   return deferred.promise;
 };
 
+PooledRedis.prototype.zrange = function(key, start, stop, withscores) {
+  var args = ['zrange', key, start, stop];
+
+  if (!!withscores) {
+    args.push('WITHSCORES');
+  }
+
+  return this.command.apply(this, args);
+}
+
+PooledRedis.prototype.zrangebyscore = function(key, start, stop, withscores) {
+  var args = ['zrangebyscore', key, start, stop];
+
+  if (!!withscores) {
+    args.push('WITHSCORES');
+  }
+
+  return this.command.apply(this, args);
+}
+
 PooledRedis.prototype.command = function() {
   var deferred = Q.defer();
   var args = Array.prototype.slice.call(arguments);
