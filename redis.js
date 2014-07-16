@@ -1,6 +1,7 @@
 'use strict';
 
-var Pool = require('generic-pool'),
+var _ = require('underscore'),
+    Pool = require('generic-pool'),
     Q = require('q'),
     Redis = require('redis');
 
@@ -54,6 +55,12 @@ PooledRedis.prototype.get = function(key) {
 
 PooledRedis.prototype.hgetall = function(key) {
   return this.command('hgetall', key);
+};
+
+PooledRedis.prototype.hmset = function(key, updates) {
+  var args = ['hmset', key].concat(_.flatten(_.pairs(updates)));
+
+  return this.command.apply(this, args);
 };
 
 PooledRedis.prototype.lpop = function(key) {
