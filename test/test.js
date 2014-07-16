@@ -93,6 +93,20 @@ describe('Pooled Redis', function() {
       expect(Redis.createClient).to.be.calledWith(5672, 'redis.example.com');
     });
 
+    it('requires that the protocol be `redis`', function() {
+
+      var raised = false;
+
+      try {
+        new PooledRedis('http://password@redis.example.com');
+      } catch (e) {
+        raised = true;
+      }
+
+      expect(raised).to.be.ok;
+
+    });
+
   });
 
 });

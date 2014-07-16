@@ -13,17 +13,16 @@ var PooledRedis = function PooledRedis(port, host, options) {
   // attempt to parse port as a connection string;
   // ie, redis://password@host:port/
   if (typeof port === 'string' && !options && (!host || _.isObject(host))) {
-    try {
-      var parsedUrl = url.parse(port);
+    var parsedUrl = url.parse(port);
 
-      options = host;
-      port = parseInt(parsedUrl.port, 10);
-      host = parsedUrl.hostname;
-      options.auth_pass = parsedUrl.auth;
-
-    } catch (e) {
-
+    if (parsedUrl.protocol != 'redis:') {
+      throw 'Unrecognized protocol: ' + parsedUrl.protocol;
     }
+
+    options = host || {};
+    port = parseInt(parsedUrl.port, 10);
+    host = parsedUrl.hostname;
+    options.auth_pass = parsedUrl.auth;
   }
 
   self.port = port || 5672;
