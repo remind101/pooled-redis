@@ -1,16 +1,44 @@
 'use strict';
 
 var _ = require('underscore'),
+    url = require('url'),
     Pool = require('generic-pool'),
     Q = require('q'),
     Redis = require('redis');
 
 var PooledRedis = function PooledRedis(port, host, options) {
-  var localThis = this;
+  var self = this;
+
+  // if options and host were not specified, or host is an object,
+  // attempt to parse port as a connection string;
+  // ie, redis://password@host:port/
+  if (typeof port === 'string' && !options && (!host || _.isObject(host))) {
+    var parsedUrl = url.parse(port);
+
+    if (parsedUrl.protocol != 'redis:') {
+      throw 'Unrecognized protocol: ' + parsedUrl.protocol;
+    }
+
+    options = host || {};
+    port = parseInt(parsedUrl.port, 10);
+    host = parsedUrl.hostname;
+    options.auth_pass = parsedUrl.auth;
+  }
+
+  self.port = port || 5672;
+  self.host = host || 'localhost';
+  self.options = _.extend(
+    {
+      poolMaxSize: 10,
+      poolMinSize: 2
+    },
+    options || {}
+  );
+
   this.pool = Pool.Pool({
     name: 'redis',
     create: function(callback) {
-      var client = Redis.createClient(port, host, options);
+      var client = Redis.createClient(self.port, self.host, self.options);
       client.on('error', function (err) {
         console.log('Redis Error', err);
       });
@@ -22,10 +50,10 @@ var PooledRedis = function PooledRedis(port, host, options) {
     destroy: function(client) {
       client.end();
     },
-    max: options.poolMaxSize || 10,
-    min: options.poolMinSize || 2,
-    idleTimeoutMillis: options.poolIdleTimeoutMillis || 60 * 1000,
-    log: options.poolLog || false
+    max: self.options.poolMaxSize,
+    min: self.options.poolMinSize,
+    idleTimeoutMillis: self.options.poolIdleTimeoutMillis || 60 * 1000,
+    log: self.options.poolLog || false
   });
 };
 
