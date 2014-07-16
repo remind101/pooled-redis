@@ -57,6 +57,42 @@ describe('Pooled Redis', function() {
 
     });
 
+    it('will set the host, port, and password from a connection URL', function() {
+
+      var redis = new PooledRedis(
+        'redis://password@redis.example.com:1234',
+
+        // pass in options so we can test that they're merged with the
+        // password
+        { poolMaxSize: 20 }
+      );
+
+      expect(redis.port).to.equal(1234);
+      expect(redis.host).to.equal('redis.example.com');
+      expect(redis.options.auth_pass).to.equal('password');
+      expect(redis.options.poolMaxSize).to.equal(20);
+
+      expect(Redis.createClient).to.be.calledWith(1234, 'redis.example.com');
+    });
+
+    it('defaults to port 5672 and no password with a connection URL', function() {
+
+      var redis = new PooledRedis(
+        'redis://redis.example.com',
+
+        // pass in options so we can test that they're merged with the
+        // password
+        { poolMaxSize: 20 }
+      );
+
+      expect(redis.port).to.equal(5672);
+      expect(redis.host).to.equal('redis.example.com');
+      expect(redis.options.auth_pass).to.be.not.ok;
+      expect(redis.options.poolMaxSize).to.equal(20);
+
+      expect(Redis.createClient).to.be.calledWith(5672, 'redis.example.com');
+    });
+
   });
 
 });

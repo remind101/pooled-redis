@@ -1,12 +1,30 @@
 'use strict';
 
 var _ = require('underscore'),
+    url = require('url'),
     Pool = require('generic-pool'),
     Q = require('q'),
     Redis = require('redis');
 
 var PooledRedis = function PooledRedis(port, host, options) {
   var self = this;
+
+  // if options and host were not specified, or host is an object,
+  // attempt to parse port as a connection string;
+  // ie, redis://password@host:port/
+  if (typeof port === 'string' && !options && (!host || _.isObject(host))) {
+    try {
+      var parsedUrl = url.parse(port);
+
+      options = host;
+      port = parseInt(parsedUrl.port, 10);
+      host = parsedUrl.hostname;
+      options.auth_pass = parsedUrl.auth;
+
+    } catch (e) {
+
+    }
+  }
 
   self.port = port || 5672;
   self.host = host || 'localhost';
