@@ -43,7 +43,7 @@ var PooledRedis = function PooledRedis(port, host, options) {
         console.log('Redis Error', err);
       });
       client.release = function() {
-        localThis.pool.release(client);
+        self.pool.release(client);
       };
       callback(null, client);
     },
