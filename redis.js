@@ -25,8 +25,8 @@ var PooledRedis = function PooledRedis(port, host, options) {
     options.auth_pass = parsedUrl.auth;
   }
 
-  self.port = port || 5672;
-  self.host = host || 'localhost';
+  self.port = port || 6379;
+  self.host = host || '127.0.0.1';
   self.options = _.extend(
     {
       poolMaxSize: 10,

@@ -43,17 +43,17 @@ describe('Pooled Redis', function() {
 
     });
 
-    it('defaults to connecting to localhost:5672', function() {
+    it('defaults to connecting to 127.0.0.1:6379', function() {
 
       var redis = new PooledRedis();
 
-      expect(redis.port).to.equal(5672);
-      expect(redis.host).to.equal('localhost');
+      expect(redis.port).to.equal(6379);
+      expect(redis.host).to.equal('127.0.0.1');
 
       expect(redis.options.poolMaxSize).to.equal(10);
       expect(redis.options.poolMinSize).to.equal(2);
 
-      expect(Redis.createClient).to.be.calledWith(5672, 'localhost');
+      expect(Redis.createClient).to.be.calledWith(6379, '127.0.0.1');
 
     });
 
@@ -75,7 +75,7 @@ describe('Pooled Redis', function() {
       expect(Redis.createClient).to.be.calledWith(1234, 'redis.example.com');
     });
 
-    it('defaults to port 5672 and no password with a connection URL', function() {
+    it('defaults to port 6379 and no password with a connection URL', function() {
 
       var redis = new PooledRedis(
         'redis://redis.example.com',
@@ -85,12 +85,12 @@ describe('Pooled Redis', function() {
         { poolMaxSize: 20 }
       );
 
-      expect(redis.port).to.equal(5672);
+      expect(redis.port).to.equal(6379);
       expect(redis.host).to.equal('redis.example.com');
       expect(redis.options.auth_pass).to.be.not.ok;
       expect(redis.options.poolMaxSize).to.equal(20);
 
-      expect(Redis.createClient).to.be.calledWith(5672, 'redis.example.com');
+      expect(Redis.createClient).to.be.calledWith(6379, 'redis.example.com');
     });
 
     it('requires that the protocol be `redis`', function() {
