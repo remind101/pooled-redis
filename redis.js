@@ -22,7 +22,7 @@ var PooledRedis = function PooledRedis(port, host, options) {
     options = host || {};
     port = parseInt(parsedUrl.port, 10);
     host = parsedUrl.hostname;
-    options.auth_pass = parsedUrl.auth;
+    options.auth_pass = (parsedUrl.auth || '').split(':').pop();
   }
 
   self.port = port || 6379;
