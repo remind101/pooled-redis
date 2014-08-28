@@ -204,26 +204,30 @@ PooledRedis.prototype.zrangebyscore = function(key, start, stop, withscores) {
 
 PooledRedis.prototype.command = function() {
   var deferred = Q.defer();
-  var args = Array.prototype.slice.call(arguments);
-  var name = args.shift();
-  this.client()
-    .then(function(client) {
-      // Tack on a callback
-      args.push(function(err, result) {
-        client.release();
-        if (err) {
-          deferred.reject(err);
-        } else {
-          deferred.resolve(result);
-        }
-      });
-      client[name].apply(client, args);
-    })
-    .fail(function(err) {
-      console.log('unable to get client', err);
-      deferred.reject(err);
-    })
-    .done();
+  try {
+    var args = Array.prototype.slice.call(arguments);
+    var name = args.shift();
+    this.client()
+      .then(function(client) {
+        // Tack on a callback
+        args.push(function(err, result) {
+          client.release();
+          if (err) {
+            deferred.reject(err);
+          } else {
+            deferred.resolve(result);
+          }
+        });
+        client[name].apply(client, args);
+      })
+      .fail(function(err) {
+        console.log('unable to get client', err);
+        deferred.reject(err);
+      })
+      .done();
+  } catch (e) {
+    deferred.reject(e);
+  }
   return deferred.promise;
 };
 
