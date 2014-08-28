@@ -41,11 +41,14 @@ var PooledRedis = function PooledRedis(port, host, options) {
       var client = Redis.createClient(self.port, self.host, self.options);
       client.on('error', function (err) {
         console.log('Redis Error', err);
+        callback(err, null);
+      });
+      client.on('connect', function() {
+        callback(null, client);
       });
       client.release = function() {
         self.pool.release(client);
       };
-      callback(null, client);
     },
     destroy: function(client) {
       client.end();
