@@ -7,7 +7,8 @@ var _ = require('underscore'),
     Redis = require('redis');
 
 var PooledRedis = function PooledRedis(port, host, options) {
-  var self = this;
+  var self = this,
+      database = null;
 
   // if options and host were not specified, or host is an object,
   // attempt to parse port as a connection string;
@@ -23,10 +24,18 @@ var PooledRedis = function PooledRedis(port, host, options) {
     port = parseInt(parsedUrl.port, 10);
     host = parsedUrl.hostname;
     options.auth_pass = (parsedUrl.auth || '').split(':').pop();
+
+    if (parsedUrl.path) {
+      var dbNum = parseInt(parsedUrl.path.substr(1), 10);
+      if (dbNum != NaN) {
+        database = dbNum;
+      }
+    }
   }
 
   self.port = port || 6379;
   self.host = host || '127.0.0.1';
+  self.database = database;
   self.options = _.extend(
     {
       poolMaxSize: 10,
@@ -44,7 +53,14 @@ var PooledRedis = function PooledRedis(port, host, options) {
         callback(err, null);
       });
       client.on('connect', function() {
-        callback(null, client);
+        if (self.database) {
+          // issue the select command before returning the client
+          client.select(self.database, function(err) {
+            callback(err, client);
+          });
+        } else {
+          callback(null, client);
+        }
       });
       client.release = function() {
         self.pool.release(client);
