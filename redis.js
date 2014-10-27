@@ -198,6 +198,10 @@ PooledRedis.prototype.get = function(key) {
   return deferred.promise;
 };
 
+PooledRedis.prototype.zcard = function(key) {
+  return this.command('zcard', key);
+};
+
 PooledRedis.prototype.zrange = function(key, start, stop, withscores) {
   var args = ['zrange', key, start, stop];
 
