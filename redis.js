@@ -92,12 +92,19 @@ PooledRedis.prototype.brpoplpush = function(source, dest, timeout) {
   return this.command('brpoplpush', source, dest, timeout);
 };
 
-PooledRedis.prototype.del = function(key) {
-  return this.command('del', key);
+// del will take an arbitrary number of keys and delete them.
+PooledRedis.prototype.del = function() {
+  var args = ['del'].concat(Array.prototype.slice.call(arguments));
+  return this.command.apply(this, args);
 };
 
 PooledRedis.prototype.get = function(key) {
   return this.command('get', key);
+};
+
+PooledRedis.prototype.mget = function() {
+  var args = ['mget'].concat(Array.prototype.slice.call(arguments));
+  return this.command.apply(this, args);
 };
 
 PooledRedis.prototype.hgetall = function(key) {
