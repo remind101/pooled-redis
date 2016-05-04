@@ -109,4 +109,23 @@ describe('Pooled Redis', function() {
 
   });
 
+  describe('#disconnect', function() {
+    it('calls pool#drain on disconnect', function() {
+      var redis = new PooledRedis();
+      redis.disconnect();
+      expect(redis.pool._draining).to.be.true;
+    });
+  });
+
+  describe('#disconnectAll', function() {
+    it('calls #disconnect on all pools ever created', function() {
+      var pools = [1, 2, 3].map(function() {
+        return new PooledRedis();
+      });
+      PooledRedis.disconnectAll();
+      pools.forEach(function(pool) {
+        expect(pool.pool._draining).to.be.true;
+      });
+    });
+  });
 });

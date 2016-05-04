@@ -6,6 +6,8 @@ var _ = require('underscore'),
     Q = require('q'),
     Redis = require('redis');
 
+var registry = [];
+
 var PooledRedis = function PooledRedis(port, host, options) {
   var self = this,
       database = null;
@@ -44,7 +46,7 @@ var PooledRedis = function PooledRedis(port, host, options) {
     options || {}
   );
 
-  this.pool = Pool.Pool({
+  self.pool = Pool.Pool({
     name: 'redis',
     create: function(callback) {
       var client = Redis.createClient(self.port, self.host, self.options);
@@ -74,6 +76,8 @@ var PooledRedis = function PooledRedis(port, host, options) {
     idleTimeoutMillis: self.options.poolIdleTimeoutMillis || 60 * 1000,
     log: self.options.poolLog || false
   });
+
+  registry.push(self);
 };
 
 PooledRedis.prototype.client = function() {
@@ -259,7 +263,29 @@ PooledRedis.prototype.command = function() {
 };
 
 PooledRedis.prototype.multi = function(commands) {
+};
 
+PooledRedis.prototype.disconnect = function() {
+  var self = this;
+  var deferred = Q.defer();
+  if (self.pool) {
+    var resolveAfterDraining = function() {
+      self.pool.destroyAllNow();
+      deferred.resolve(self);
+    };
+    self.pool.drain(resolveAfterDraining);
+  } else {
+    deferred.resolve(self);
+  }
+  return deferred.promise;
+};
+
+PooledRedis.disconnectAll = function() {
+  var disconnectPromises = registry.map(function(instance) {
+    return instance.disconnect();
+  });
+  registry = [];
+  return Q.all(disconnectPromises);
 };
 
 module.exports = PooledRedis;
