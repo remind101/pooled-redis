@@ -106,6 +106,10 @@ PooledRedis.prototype.get = function(key) {
   return this.command('get', key);
 };
 
+PooledRedis.prototype.expire = function(key, seconds) {
+  return this.command('expire', key, seconds)
+};
+
 PooledRedis.prototype.mget = function() {
   var args = ['mget'].concat(Array.prototype.slice.call(arguments));
   return this.command.apply(this, args);
