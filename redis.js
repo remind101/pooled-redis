@@ -69,7 +69,7 @@ var PooledRedis = function PooledRedis(port, host, options) {
       };
     },
     destroy: function(client) {
-      client.end();
+      client.quit();
     },
     max: self.options.poolMaxSize,
     min: self.options.poolMinSize,
