@@ -196,6 +196,30 @@ PooledRedis.prototype.smembers = function(key) {
   return this.command('smembers', key);
 };
 
+PooledRedis.prototype.sadd = function(key, field) {
+  return this.command('sadd', key, field);
+};
+
+PooledRedis.prototype.srem = function(key, field) {
+  return this.command('srem', key, field);
+};
+
+PooledRedis.prototype.spop = function(key, count) {
+  return this.command('spop', key, count);
+};
+
+PooledRedis.prototype.hsetnx = function(key, field, value) {
+  return this.command('hsetnx', key, field, value);
+};
+
+PooledRedis.prototype.hget = function(key, field) {
+  return this.command('hget', key, field);
+};
+
+PooledRedis.prototype.hdel = function(key, field) {
+  return this.command('hdel', key, field);
+};
+
 PooledRedis.prototype.get = function(key) {
   var deferred = Q.defer();
 
