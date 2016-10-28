@@ -216,6 +216,10 @@ PooledRedis.prototype.hget = function(key, field) {
   return this.command('hget', key, field);
 };
 
+PooledRedis.prototype.hgetall = function(key) {
+  return this.command('hgetall', key);
+};
+
 PooledRedis.prototype.hdel = function(key, field) {
   return this.command('hdel', key, field);
 };
