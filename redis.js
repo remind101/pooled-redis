@@ -153,10 +153,6 @@ PooledRedis.prototype.rpoplpush = function(source, dest) {
   return this.command('rpoplpush', source, dest);
 };
 
-PooledRedis.prototype.sadd = function(key, value) {
-  return this.command('sadd', key, value);
-};
-
 PooledRedis.prototype.set = function(key, value, expireSeconds) {
 
   var args = ['set', key, value];
