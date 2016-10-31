@@ -13,7 +13,7 @@
   "author": "Remind 101 (https://github.com/remind101)",
   "dependencies": {
     "generic-pool": "~2.4",
-    "q": "~1.0",
+    "q": "^1.0.1",
     "redis": "2.6.2",
     "underscore": "~1.8"
   },
