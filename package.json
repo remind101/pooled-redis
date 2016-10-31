@@ -1,6 +1,6 @@
 {
   "name": "pooled-redis",
-  "version": "2.6.2-1",
+  "version": "2.7.0",
   "description": "Connection pooled Redis client that utilizes promises.",
   "main": "redis.js",
   "repository": {
