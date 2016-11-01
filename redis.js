@@ -200,6 +200,10 @@ PooledRedis.prototype.srem = function(key, field) {
   return this.command('srem', key, field);
 };
 
+PooledRedis.prototype.srandmember = function(key, count) {
+  return this.command('srandmember', key, count);
+};
+
 PooledRedis.prototype.spop = function(key, count) {
   return this.command('spop', key, count);
 };
