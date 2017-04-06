@@ -121,7 +121,7 @@ PooledRedis.prototype.hgetall = function(key) {
 
 PooledRedis.prototype.hmget = function() {
   var args = ['hmget'].concat(Array.prototype.slice.call(arguments));
-  return this.command.apply(this.args);
+  return this.command.apply(this, args);
 }
 
 PooledRedis.prototype.hmset = function(key, updates) {
